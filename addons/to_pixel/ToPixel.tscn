@@ -13,6 +13,8 @@ data = {
 }
 
 [sub_resource type="ImageTexture" id=7]
+flags = 0
+flags = 0
 image = SubResource( 6 )
 size = Vector2( 64, 64 )
 
@@ -65,7 +67,7 @@ __meta__ = {
 render_viewport_path = NodePath("../Viewport")
 
 [node name="Viewport" type="Viewport" parent="ViewportBackground"]
-size = Vector2( 240, 240 )
+size = Vector2( 128, 128 )
 transparent_bg = true
 hdr = false
 disable_3d = true
@@ -77,19 +79,6 @@ margin_right = 64.0
 margin_bottom = 64.0
 texture = SubResource( 7 )
 
-[node name="ReferenceRect" type="ReferenceRect" parent="ViewportBackground/Viewport/TextureRect"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -2.0
-margin_top = -2.0
-margin_right = 2.0
-margin_bottom = 2.0
-border_color = Color( 0.647059, 0.717647, 0.952941, 1 )
-editor_only = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="TextureRect" type="TextureRect" parent="ViewportBackground"]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -97,10 +86,11 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -120.0
 margin_top = -120.0
-margin_right = 120.0
-margin_bottom = 120.0
+margin_right = 8.0
+margin_bottom = 8.0
 texture = SubResource( 3 )
-stretch_mode = 3
+expand = true
+stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -111,6 +101,20 @@ material = SubResource( 5 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ReferenceRect" type="ReferenceRect" parent="ViewportBackground"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 392.0
+margin_top = 180.0
+margin_right = -568.0
+margin_bottom = -356.0
+mouse_filter = 2
+border_color = Color( 0.647059, 0.717647, 0.952941, 1 )
+editor_only = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
