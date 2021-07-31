@@ -20,11 +20,12 @@ func _gui_input(event):
 		
 		if event.button_index == BUTTON_WHEEL_UP:
 			zoom_level *= 1.1
+			canvas.rect_position += -0.1*(get_local_mouse_position() - canvas.rect_position)
 		if event.button_index == BUTTON_WHEEL_DOWN:
 			zoom_level *= 0.9
-
+			canvas.rect_position += 0.1*(get_local_mouse_position() - canvas.rect_position)
+			
 		if event.button_index == BUTTON_LEFT:
-
 			if event.is_pressed():
 				if texture_rect.get_rect().has_point(mouse_pos_in_viewport):
 					$ReferenceRect.visible = true
