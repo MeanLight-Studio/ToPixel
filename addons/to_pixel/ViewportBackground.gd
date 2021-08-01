@@ -11,6 +11,7 @@ var canvas_grab_offset := Vector2()
 var mouse_pos_in_viewport := Vector2()
 var zoom_level := 1.0
 
+
 func _gui_input(event):
 	if event is InputEventMouseButton:
 		
@@ -58,10 +59,16 @@ func _process(delta):
 	
 
 	if grabbing:
-		$Viewport/TextureRect.rect_position = mouse_pos_in_viewport + scene_offset
-		
+		$Viewport/TextureRect.rect_position = (mouse_pos_in_viewport + scene_offset).snapped(Vector2.ONE)
 	$ReferenceRect.rect_size = $Viewport/TextureRect.rect_size*zoom_level
 	$ReferenceRect.rect_position = ($Viewport/TextureRect.rect_position*zoom_level + $TextureRect.rect_position)
 	
 	if grabbing_canvas:
 		canvas.rect_position = get_local_mouse_position() + canvas_grab_offset
+	
+	
+
+
+
+func _on_ColorRect_resized():
+	$TextureRect/ColorRect.material.set_shader_param("rect_size", $TextureRect/ColorRect.rect_size/zoom_level)
