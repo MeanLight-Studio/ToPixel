@@ -114,7 +114,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 0 ), Vector2( 0, 0 ) ]
+"values": [ Vector2( 0, 0 ), Vector2( -42.0448, -33.6359 ) ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath(".:rotation_degrees")
@@ -154,7 +154,8 @@ tracks/5/keys = {
 }
 
 [node name="Sprite" type="Sprite"]
-rotation = -0.180477
+position = Vector2( -12.6569, -10.1255 )
+rotation = -0.135603
 texture = ExtResource( 1 )
 __meta__ = {
 "_edit_ik_": true
@@ -162,7 +163,7 @@ __meta__ = {
 
 [node name="icon" type="Sprite" parent="."]
 position = Vector2( 77.844, 57.7801 )
-rotation = 0.142008
+rotation = 0.0596223
 texture = ExtResource( 1 )
 __meta__ = {
 "_edit_bone_": true
@@ -170,7 +171,21 @@ __meta__ = {
 
 [node name="icon" type="Sprite" parent="icon"]
 position = Vector2( 2.66968, 77.4207 )
-rotation = 0.0384693
+rotation = 0.073805
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_bone_": true
+}
+
+[node name="icon2" type="Sprite" parent="icon/icon"]
+scale = Vector2( 1, 1 )
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_bone_": true
+}
+
+[node name="icon3" type="Sprite" parent="icon/icon/icon2"]
+scale = Vector2( 1, 1 )
 texture = ExtResource( 1 )
 __meta__ = {
 "_edit_bone_": true
