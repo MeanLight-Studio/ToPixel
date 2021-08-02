@@ -54,7 +54,7 @@ func get_sprites(node):
 func _on_Button_pressed():
 	var scene := preload("res://Sprite.tscn").instance()
 	viewport.add_scene(scene)
-	
+	sprites = []
 	get_sprites(scene)
 	sprites_tree.clear()
 	var root : TreeItem = sprites_tree.create_item()
@@ -62,20 +62,20 @@ func _on_Button_pressed():
 	
 	var layer_1 : TreeItem = sprites_tree.create_item(root)
 	layer_1.set_text(0, "Layer 1")
-	layer_1.set_metadata(0, "layer")
+	layer_1.set_metadata(0, {"type" : "layer"})
 	for sprite in sprites:
-		var child : TreeItem = sprites_tree.create_item(root)
+		var child : TreeItem = sprites_tree.create_item(layer_1)
 		child.set_text(0, sprite.name)
-		child.set_metadata(0, "texture")
-		child.set_metadata(1, origin.get_path_to(sprite))
+		child.set_metadata(0, {"type" : "layer", "path" : origin.get_path_to(sprite)})
 	
+	animation_players = []
 	get_animation_players(scene)
 	for player in animation_players:
 		player_options.add_item(player.name)
 		player.connect("animation_finished", self, "_on_animation_finished")
 		
 	_on_OptionButton_item_selected(0)
-	yield(get_tree(),"idle_frame")
+	yield(VisualServer,"frame_post_draw")
 	viewport_background.need_to_update = true
 	
 
@@ -114,3 +114,12 @@ func _on_AnimationOptionButton_item_selected(index):
 
 func _on_animation_finished(animation):
 	animations_options.select(0)
+
+
+func _on_Tree_item_activated():
+	var selected_item : TreeItem = sprites_tree.get_selected()
+	if selected_item:
+		selected_item.set_editable(0,true)
+		sprites_tree.edit_selected()
+		selected_item.set_editable(0,false)
+

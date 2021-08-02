@@ -178,14 +178,12 @@ __meta__ = {
 }
 
 [node name="icon2" type="Sprite" parent="icon/icon"]
-scale = Vector2( 1, 1 )
 texture = ExtResource( 1 )
 __meta__ = {
 "_edit_bone_": true
 }
 
 [node name="icon3" type="Sprite" parent="icon/icon/icon2"]
-scale = Vector2( 1, 1 )
 texture = ExtResource( 1 )
 __meta__ = {
 "_edit_bone_": true
