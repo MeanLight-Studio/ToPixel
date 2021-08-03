@@ -177,18 +177,6 @@ __meta__ = {
 "_edit_bone_": true
 }
 
-[node name="icon2" type="Sprite" parent="icon/icon"]
-texture = ExtResource( 1 )
-__meta__ = {
-"_edit_bone_": true
-}
-
-[node name="icon3" type="Sprite" parent="icon/icon/icon2"]
-texture = ExtResource( 1 )
-__meta__ = {
-"_edit_bone_": true
-}
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "Idle"
 anims/Attack = SubResource( 1 )

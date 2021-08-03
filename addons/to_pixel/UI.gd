@@ -71,7 +71,8 @@ func _on_Button_pressed():
 		var child : TreeItem = sprites_tree.create_item(layer_1)
 		child.set_text(0, sprite.name)
 		child.set_metadata(0, {"type" : "texture", "path" : origin.get_path_to(sprite)})
-	
+		child.set_icon(0, sprite.texture)
+		child.set_icon_max_width(0,24)
 	animation_players = []
 	get_animation_players(scene)
 	for player in animation_players:
