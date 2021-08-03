@@ -7,6 +7,7 @@ export (NodePath) var viewport_background_path
 
 var sprites := []
 var animation_players := []
+var layers = 0
 
 onready var canvas_viewport := get_node(canvas_viewport_path)
 onready var viewport := get_node(viewport_path)
@@ -19,10 +20,13 @@ onready var player_options := $PanelContainer2/VBoxContainer/OptionButton
 onready var player_animations_container := $PanelContainer2/VBoxContainer/AnimationsContainer
 onready var sprites_tree := $PanelContainer3/Tree
 onready var animations_options := $PanelContainer2/VBoxContainer/VBoxContainer/AnimationOptionButton
+onready var export_config_button := $HBoxContainer2/ConfigButton
+
 
 func _ready():
 	width_spinbox.value = canvas_viewport.size.x
 	height_spinbox.value = canvas_viewport.size.y
+	export_config_button.icon = get_icon("Edit", "EditorIcons")
 
 func _process(delta):
 	var animation_player := get_current_animation_player()
@@ -50,7 +54,6 @@ func get_sprites(node):
 		get_sprites(child)
 
 
-
 func _on_Button_pressed():
 	var scene := preload("res://Sprite.tscn").instance()
 	viewport.add_scene(scene)
@@ -61,12 +64,13 @@ func _on_Button_pressed():
 	root.set_text(0, "Root")
 	
 	var layer_1 : TreeItem = sprites_tree.create_item(root)
+	layers = 1
 	layer_1.set_text(0, "Layer 1")
 	layer_1.set_metadata(0, {"type" : "layer"})
 	for sprite in sprites:
 		var child : TreeItem = sprites_tree.create_item(layer_1)
 		child.set_text(0, sprite.name)
-		child.set_metadata(0, {"type" : "layer", "path" : origin.get_path_to(sprite)})
+		child.set_metadata(0, {"type" : "texture", "path" : origin.get_path_to(sprite)})
 	
 	animation_players = []
 	get_animation_players(scene)
@@ -116,10 +120,10 @@ func _on_animation_finished(animation):
 	animations_options.select(0)
 
 
-func _on_Tree_item_activated():
-	var selected_item : TreeItem = sprites_tree.get_selected()
-	if selected_item:
-		selected_item.set_editable(0,true)
-		sprites_tree.edit_selected()
-		selected_item.set_editable(0,false)
-
+func _on_ButtonAddLayer_pressed():
+	if sprites.size() == 0:
+		return
+	layers += 1
+	var new_layer : TreeItem = sprites_tree.create_item(sprites_tree.get_root())
+	new_layer.set_text(0, "Layer "+str(layers))
+	new_layer.set_metadata(0, {"type" : "layer"})
