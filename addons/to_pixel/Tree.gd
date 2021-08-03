@@ -34,7 +34,6 @@ func drop_data(position, item : TreeItem):
 	var idx = 0
 	var position_item : TreeItem = parent_item.get_children()
 	
-	print(shift)
 	while position_item != null:
 		idx +=1
 		if position_item == to_item:
