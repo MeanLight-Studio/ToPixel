@@ -128,3 +128,23 @@ func _on_ButtonAddLayer_pressed():
 	var new_layer : TreeItem = sprites_tree.create_item(sprites_tree.get_root())
 	new_layer.set_text(0, "Layer "+str(layers))
 	new_layer.set_metadata(0, {"type" : "layer"})
+
+func get_animations( only_checked := false) -> Array:
+	var animations := []
+	for animation in player_animations_container.get_children():
+		if animation.is_pressed() or !only_checked:
+			animations.append(animation.text)
+	return animations
+
+func get_layers() -> Dictionary:
+	var layers := {}
+	var layer : TreeItem = sprites_tree.get_root().get_children()
+	while layer != null:
+		var sprites := []
+		var layer_child : TreeItem = layer.get_children()
+		while layer_child != null:
+			sprites.append(layer_child.get_metadata(0)["path"])
+			layer_child = layer_child.get_next()
+		layers[layer.get_text(0)] = sprites
+		layer = layer.get_next()
+	return layers
