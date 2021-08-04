@@ -15,7 +15,7 @@ func export_aseprite():
 	
 	ase_ex.frame_duration_ms = 1.0/fps*1000
 	
-	ase_ex.set_canvas_size_px(canvas.rect_size.x, canvas.rect_size.y)
+	ase_ex.set_canvas_size_px(ui.width_spinbox.value, ui.height_spinbox.value)
 	var animations : Array = ui.get_animations(true)
 	var layers : Dictionary = ui.get_layers()
 	var animation_player : AnimationPlayer = ui.get_current_animation_player()

@@ -50,6 +50,8 @@ func get_animation_players(node):
 func get_sprites(node):
 	if node is Sprite or node is Polygon2D:
 		sprites.append(node)
+	elif "self_modulate" in node:
+		node.self_modulate = Color.transparent
 	for child in node.get_children():
 		get_sprites(child)
 
