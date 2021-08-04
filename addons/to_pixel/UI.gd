@@ -218,6 +218,7 @@ func update_layers_children_visibility():
 	sync_animation_players()
 
 func sync_animation_players():
-	for layer in layers_container.get_children():
-		for player in layer.get_animation_players():
-			player.seek(0, true)
+	pass
+#	for layer in layers_container.get_children():
+#		for player in layer.get_animation_players():
+#			player.seek(0, true)

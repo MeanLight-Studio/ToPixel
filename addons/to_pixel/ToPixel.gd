@@ -89,3 +89,4 @@ func stop_animations():
 func sync_animations(t : float):
 	for layer in layers_container.get_children():
 		ui.get_current_animation_player(layer).seek(t,true)
+	
