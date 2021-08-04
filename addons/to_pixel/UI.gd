@@ -21,7 +21,7 @@ onready var player_animations_container := $PanelContainer2/VBoxContainer/Animat
 onready var sprites_tree := $PanelContainer3/Tree
 onready var animations_options := $PanelContainer2/VBoxContainer/VBoxContainer/AnimationOptionButton
 onready var export_config_button := $HBoxContainer2/ConfigButton
-
+onready var import_file_dialog := $"../../FileDialog"
 
 func _ready():
 	width_spinbox.value = canvas_viewport.size.x
@@ -53,8 +53,7 @@ func get_sprites(node):
 	for child in node.get_children():
 		get_sprites(child)
 
-
-func _on_Button_pressed():
+func load_scene(path : String):
 	var scene := preload("res://Sprite.tscn").instance()
 	viewport.add_scene(scene)
 	sprites = []
@@ -83,6 +82,8 @@ func _on_Button_pressed():
 	yield(VisualServer,"frame_post_draw")
 	viewport_background.need_to_update = true
 	
+func _on_Button_pressed():
+	import_file_dialog.popup()
 
 func _on_OptionButton_item_selected(index):
 	var selected_player = animation_players[index]
@@ -148,3 +149,7 @@ func get_layers() -> Dictionary:
 		layers[layer.get_text(0)] = sprites
 		layer = layer.get_next()
 	return layers
+
+
+func _on_FileDialog_file_selected(path):
+	load_scene(path)

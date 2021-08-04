@@ -9,4 +9,5 @@ func _ready():
 func add_scene(scene):
 	for child in origin.get_children():
 		child.queue_free()
+		yield(child, "tree_exited")
 	origin.add_child(scene)
