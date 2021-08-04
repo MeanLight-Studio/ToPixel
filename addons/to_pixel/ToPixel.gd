@@ -24,7 +24,7 @@ func export_aseprite():
 	
 	var from_frame := 0
 	var tags := []
-	for animation_name in animation_player.get_animation_list():
+	for animation_name in animations:
 		var animation : Animation = animation_player.get_animation(animation_name)
 		var frame_count := int(animation.length * fps)
 		var tag := [animation_name, from_frame, from_frame+frame_count]
