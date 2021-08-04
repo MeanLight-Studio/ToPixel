@@ -23,10 +23,6 @@ _global_script_class_icons={
 config/name="ToPixel"
 config/icon="res://icon.png"
 
-[editor_plugins]
-
-enabled=PoolStringArray( "res://addons/to_pixel/plugin.cfg" )
-
 [physics]
 
 common/enable_pause_aware_picking=true

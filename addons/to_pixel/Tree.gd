@@ -1,6 +1,12 @@
 tool
 extends Tree
 
+signal sprite_moved
+signal layer_moved(layer_names)
+signal layer_name_changed(old_name, new_name)
+
+var _item_edited : TreeItem
+var _item_edited_name := ""
 
 func get_drag_data(_position):
 
@@ -25,7 +31,8 @@ func drop_data(position, item : TreeItem):
 	var parent_item : TreeItem
 	
 	parent_item = to_item
-	if item.get_metadata(0)["type"] == "layer":
+	var type : String =  item.get_metadata(0)["type"]
+	if type == "layer":
 		parent_item = get_root()
 	else:
 		if parent_item.get_metadata(0)["type"] != "layer" or shift != 0:
@@ -65,13 +72,27 @@ func drop_data(position, item : TreeItem):
 	
 	item.free()
 	
+	if type == "layer":
+		var layer := get_root().get_children()
+		var layer_names := []
+		while layer != null:
+			layer_names.append(layer.get_text(0))
+			layer = layer.get_next()
+		emit_signal("layer_moved", layer_names)
+	else:
+		emit_signal("sprite_moved")
 
-		
 
 func _on_Tree_item_activated():
 	var selected_item : TreeItem = get_selected()
 	if selected_item:
+		_item_edited = selected_item
+		_item_edited_name = _item_edited.get_text(0)
 		selected_item.set_editable(0,true)
 		edit_selected()
 		selected_item.set_editable(0,false)
 
+
+func _on_Tree_item_edited():
+	var edited_item : TreeItem = get_selected()
+	emit_signal("layer_name_changed", _item_edited_name, edited_item.get_text(0))

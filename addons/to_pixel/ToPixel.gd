@@ -5,10 +5,9 @@ var fps := 12.0
 
 onready var canvas := $HBoxContainer/ViewportBackground/TextureRect
 onready var ui := $HBoxContainer/UI
-onready var origin := $Viewport/Origin
-onready var viewport := $Viewport
 onready var texture_in_viewport := $HBoxContainer/ViewportBackground/Viewport/TextureRect
 onready var viewport_background := $HBoxContainer/ViewportBackground
+onready var layers_container := $Layers
 
 func export_aseprite():
 	var ase_ex := AsepriteExporter.new()
@@ -34,33 +33,24 @@ func export_aseprite():
 	ase_ex.define_tags(tags)
 	# Get sprite array
 	
-	var sprites := []
-	
-	for layer in layers:
-		for path in layers[layer]:
-			var sprite = origin.get_node(path)
-			sprites.append(sprite)
-			sprite.self_modulate = Color.transparent
 			
 	VisualServer.force_draw(true)
 	var image : Image
-	
-	var im := 0
+	var tic := OS.get_ticks_msec()
 	for animation_name in animations:
-		animation_player.current_animation = animation_name
+		set_animation(animation_name)
 		var animation : Animation = animation_player.get_animation(animation_name)
-		animation_player.stop()
+		stop_animations()
 		var t := 0.0
 		while t <= animation.length:
-			animation_player.seek(t, true)
-			canvas.get_parent().need_to_update = true
+			sync_animations(t)
+#			canvas.get_parent().need_to_update = true
+			yield(VisualServer,"frame_post_draw")
 			
 			for layer in layers:
-				for path in layers[layer]:
-					origin.get_node(path).self_modulate = Color.white
 					
-				yield(VisualServer,"frame_post_draw")
-				
+				var viewport : Viewport = layers_container.get_layer(layer)
+				var origin : Position2D = viewport.origin
 				var texture : Texture = viewport.get_texture()
 				image = texture.get_data()
 				image.flip_y()
@@ -69,19 +59,14 @@ func export_aseprite():
 				var cel_position : Vector2 = (used_rect.position - origin.position)+viewport_background.scene_position
 
 				ase_ex.add_cel(image, cel_position)
-				im+=1
-				
-				for path in layers[layer]:
-					origin.get_node(path).self_modulate = Color.transparent
+
 			
 			t += 1.0/fps
 			ase_ex.next_frame()
 			
 	ase_ex.create_file("res://new_test.aseprite")
 			
-	for sprite in sprites:
-		sprite.self_modulate = Color.white
-		
+	print(OS.get_ticks_msec()-tic)
 	
 	canvas.get_parent().need_to_update = true
 
@@ -89,4 +74,14 @@ func _on_ExportButton_pressed():
 	export_aseprite()
 	
 
-	
+func set_animation(animation_name : String):
+	for layer in layers_container.get_children():
+		ui.get_current_animation_player(layer).current_animation = animation_name
+		
+func stop_animations():
+	for layer in layers_container.get_children():
+		ui.get_current_animation_player(layer).stop()
+		
+func sync_animations(t : float):
+	for layer in layers_container.get_children():
+		ui.get_current_animation_player(layer).seek(t,true)

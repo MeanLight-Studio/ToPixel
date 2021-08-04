@@ -2,7 +2,7 @@ tool
 extends VBoxContainer
 
 export (NodePath) var canvas_viewport_path
-export (NodePath) var viewport_path
+export (NodePath) var layers_path
 export (NodePath) var viewport_background_path
 
 var sprites := []
@@ -10,9 +10,8 @@ var animation_players := []
 var layers = 0
 
 onready var canvas_viewport := get_node(canvas_viewport_path)
-onready var viewport := get_node(viewport_path)
+onready var layers_container := get_node(layers_path)
 onready var viewport_background := get_node(viewport_background_path)
-onready var origin := viewport.get_node("Origin")
 
 onready var width_spinbox := $PanelContainer/GridContainer/SpinBoxCanvasWidth
 onready var height_spinbox := $PanelContainer/GridContainer/SpinBoxCanvasHeight
@@ -29,9 +28,11 @@ func _ready():
 	export_config_button.icon = get_icon("Edit", "EditorIcons")
 
 func _process(delta):
+	if layers_container == null or layers_container.get_child_count() == 0:
+		return
 	var animation_player := get_current_animation_player()
 	if animation_player:
-		viewport_background.need_to_update = get_current_animation_player().is_playing()
+		viewport_background.need_to_update = animation_player.is_playing()
 	
 func _on_SpinBoxCanvasWidth_value_changed(value):
 	canvas_viewport.size.x = value
@@ -54,9 +55,20 @@ func get_sprites(node):
 		node.self_modulate = Color.transparent
 	for child in node.get_children():
 		get_sprites(child)
+		
 
 func load_scene(path : String):
 	var scene = load(path).instance()
+	var viewport := preload("res://addons/to_pixel/Viewport.tscn").instance()
+	
+	for l in layers_container.get_children():
+		l.queue_free()
+		yield(l,"tree_exited")
+	
+	layers_container.add_child(viewport)
+	var origin = viewport.origin
+	viewport.layer_name = "Layer 1"
+	
 	viewport.add_scene(scene)
 	sprites = []
 	get_sprites(scene)
@@ -106,19 +118,22 @@ func _on_OptionButton_item_selected(index):
 		player_animations_container.add_child(checkbox)
 		animations_options.add_item(animation)
 
-func get_current_animation_player() -> AnimationPlayer:
+func get_current_animation_player(layer = null) -> AnimationPlayer:
+	if layer == null:
+		layer = layers_container.get_child(0)
 	var selected_player : AnimationPlayer = null
-	for player in animation_players:
+	for player in layer.get_animation_players():
 		if player_options.text == player.name:
 			selected_player = player
 			break
 	return selected_player
 
 func _on_AnimationOptionButton_item_selected(index):
-	var animation_player := get_current_animation_player()
-	if index == 0:
-		animation_player.stop()
-	get_current_animation_player().play(animations_options.text)
+	for layer in layers_container.get_children():
+		var animation_player := get_current_animation_player(layer)
+		if index == 0:
+			animation_player.stop()
+		animation_player.play(animations_options.text)
 
 func _on_animation_finished(animation):
 	animations_options.select(0)
@@ -127,10 +142,17 @@ func _on_animation_finished(animation):
 func _on_ButtonAddLayer_pressed():
 	if sprites.size() == 0:
 		return
+		
 	layers += 1
 	var new_layer : TreeItem = sprites_tree.create_item(sprites_tree.get_root())
 	new_layer.set_text(0, "Layer "+str(layers))
 	new_layer.set_metadata(0, {"type" : "layer"})
+	
+	var viewport := layers_container.get_child(0).duplicate()
+	layers_container.add_child(viewport)
+	viewport.layer_name = "Layer "+str(layers)
+	
+	update_layers_children_visibility()
 
 func get_animations( only_checked := false) -> Array:
 	var animations := []
@@ -165,3 +187,37 @@ func get_layers() -> Dictionary:
 
 func _on_FileDialog_file_selected(path):
 	load_scene(path)
+
+func update_layers_children_visibility():
+	var layer : TreeItem = sprites_tree.get_root().get_children()
+	var all_layeres_info := {}
+	while layer != null:
+		var layer_name : String = layer.get_text(0)
+		var layer_viewport : Viewport = layers_container.get_layer(layer_name)
+		var sprites_in_layer : Array = layer_viewport.get_sprite_paths()
+		
+		
+		var layer_info := {}
+		
+		for sprite_path in sprites_in_layer:
+			layer_info[sprite_path] = false
+			var sprite : TreeItem = layer.get_children()
+			while sprite != null:
+				var sprite_text : String = sprite.get_metadata(0)["path"]
+				if sprite_text == sprite_path:
+					layer_info[sprite_path] = true
+					break
+				sprite = sprite.get_next()
+				
+		all_layeres_info[layer_name] = layer_info
+		layer = layer.get_next()
+	
+	for l in all_layeres_info:
+		layers_container.get_layer(l).set_children_visible(all_layeres_info[l])
+	
+	sync_animation_players()
+
+func sync_animation_players():
+	for layer in layers_container.get_children():
+		for player in layer.get_animation_players():
+			player.seek(0, true)

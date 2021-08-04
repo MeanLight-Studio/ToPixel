@@ -5,7 +5,7 @@
 [sub_resource type="Animation" id=1]
 resource_name = "Attack"
 tracks/0/type = "value"
-tracks/0/path = NodePath("icon/icon:position")
+tracks/0/path = NodePath("iconback/icon:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -17,7 +17,7 @@ tracks/0/keys = {
 "values": [ Vector2( 2.66968, 77.4207 ), Vector2( 2.66968, 77.4207 ), Vector2( 2.66968, 77.4207 ), Vector2( 2.66968, 77.4207 ), Vector2( 2.66968, 77.4207 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("icon/icon:rotation_degrees")
+tracks/1/path = NodePath("iconback/icon:rotation_degrees")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -29,7 +29,7 @@ tracks/1/keys = {
 "values": [ 8.92958, 5.84469, 79.7323, 2.53934, 0.71939 ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("icon:position")
+tracks/2/path = NodePath("iconback:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -41,7 +41,7 @@ tracks/2/keys = {
 "values": [ Vector2( 77.844, 57.7801 ), Vector2( 77.844, 57.7801 ), Vector2( 77.844, 57.7801 ), Vector2( 77.844, 57.7801 ), Vector2( 77.844, 57.7801 ) ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("icon:rotation_degrees")
+tracks/3/path = NodePath("iconback:rotation_degrees")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -81,7 +81,7 @@ tracks/5/keys = {
 resource_name = "Idle"
 loop = true
 tracks/0/type = "value"
-tracks/0/path = NodePath("icon:position")
+tracks/0/path = NodePath("iconback:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -93,7 +93,7 @@ tracks/0/keys = {
 "values": [ Vector2( 77.844, 57.7801 ), Vector2( 77.844, 57.7801 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("icon:rotation_degrees")
+tracks/1/path = NodePath("iconback:rotation_degrees")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -129,7 +129,7 @@ tracks/3/keys = {
 "values": [ -10.3406, -1.79965 ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("icon/icon:position")
+tracks/4/path = NodePath("iconback/icon:position")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
@@ -141,7 +141,7 @@ tracks/4/keys = {
 "values": [ Vector2( 2.66968, 77.4207 ), Vector2( 2.66968, 77.4207 ) ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("icon/icon:rotation_degrees")
+tracks/5/path = NodePath("iconback/icon:rotation_degrees")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/imported = false
@@ -161,7 +161,7 @@ __meta__ = {
 "_edit_ik_": true
 }
 
-[node name="icon" type="Sprite" parent="."]
+[node name="iconback" type="Sprite" parent="."]
 position = Vector2( 77.844, 57.7801 )
 rotation = 0.0596223
 texture = ExtResource( 1 )
@@ -169,7 +169,20 @@ __meta__ = {
 "_edit_bone_": true
 }
 
-[node name="icon" type="Sprite" parent="icon"]
+[node name="icon" type="Sprite" parent="iconback"]
+position = Vector2( 2.66968, 77.4207 )
+rotation = 0.073805
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_bone_": true
+}
+
+[node name="icon2" type="Sprite" parent="."]
+position = Vector2( 105.983, 50.5865 )
+rotation = 0.0596223
+texture = ExtResource( 1 )
+
+[node name="icon" type="Sprite" parent="icon2"]
 position = Vector2( 2.66968, 77.4207 )
 rotation = 0.073805
 texture = ExtResource( 1 )

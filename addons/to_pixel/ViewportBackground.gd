@@ -1,7 +1,9 @@
 tool
 extends ColorRect
 
-export (NodePath) var render_viewport_path
+export (NodePath) var layers_path
+
+onready var layers_container := get_node(layers_path)
 
 var editor_interface: EditorInterface
 var grabbing := false
@@ -20,7 +22,6 @@ func _gui_input(event):
 		need_to_update = need_to_update or true
 	if event is InputEventMouseButton:
 		
-		var viewport : Viewport = get_node(render_viewport_path)
 		var texture_rect := $Viewport/TextureRect
 		var canvas := $TextureRect
 		
@@ -66,20 +67,25 @@ func _process(delta):
 		update()
 	
 func update():
-	var viewport : Viewport = get_node(render_viewport_path)
-	var origin : Position2D = viewport.get_node("Origin")
-	var viewport_image := viewport.get_texture().get_data()
-	var used_rect := viewport_image.get_used_rect()
+	var final_image := Image.new()
+	final_image.create(1024, 600, true, Image.FORMAT_RGBA8)
+	
+	for viewport in layers_container.get_children():
+		var viewport_image : Image = viewport.get_texture().get_data()
+		var used_rect := viewport_image.get_used_rect()
+		final_image.blend_rect(viewport_image, used_rect, used_rect.position)
+		
+	var used_rect := final_image.get_used_rect()
 	if used_rect.size > Vector2.ZERO:
-		viewport_image.flip_y()
-		used_rect = viewport_image.get_used_rect()
-		viewport_image = viewport_image.get_rect(used_rect)
+		final_image.flip_y()
+		used_rect = final_image.get_used_rect()
+		final_image = final_image.get_rect(used_rect)
 		var texture := ImageTexture.new()
-		texture.create_from_image(viewport_image)
-		$Viewport/TextureRect.rect_size = viewport_image.get_size()
+		texture.create_from_image(final_image)
+		$Viewport/TextureRect.rect_size = final_image.get_size()
 		$Viewport/TextureRect.texture = texture
 		$Viewport/TextureRect.texture.flags = 0
-		scene_pivot = used_rect.position - origin.position
+		scene_pivot = used_rect.position - Vector2(1024, 600)/2
 		$Viewport/TextureRect.rect_position = (scene_pivot + scene_position).snapped(Vector2.ONE)
 
 
