@@ -12,12 +12,26 @@ onready var viewport_background := $HBoxContainer/ViewportBackground
 
 func export_aseprite():
 	var ase_ex := AsepriteExporter.new()
+	
+	ase_ex.frame_duration_ms = 1.0/fps*1000
+	
 	ase_ex.set_canvas_size_px(canvas.rect_size.x, canvas.rect_size.y)
 	var animations : Array = ui.get_animations(true)
 	var layers : Dictionary = ui.get_layers()
 	var animation_player : AnimationPlayer = ui.get_current_animation_player()
 	
 	ase_ex.define_layers(layers.keys())
+	
+	var from_frame := 0
+	var tags := []
+	for animation_name in animation_player.get_animation_list():
+		var animation : Animation = animation_player.get_animation(animation_name)
+		var frame_count := int(animation.length * fps)
+		var tag := [animation_name, from_frame, from_frame+frame_count]
+		from_frame += frame_count + 1
+		tags.append(tag)
+		
+	ase_ex.define_tags(tags)
 	# Get sprite array
 	
 	var sprites := []
