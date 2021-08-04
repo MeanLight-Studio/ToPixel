@@ -11,7 +11,8 @@ onready var layers_container := $Layers
 
 func export_aseprite():
 	var ase_ex := AsepriteExporter.new()
-	
+	var progress_bar : ProgressBar = viewport_background.get_node("ProgressBar")
+	var progress_label : Label = progress_bar.get_node("Label")
 	ase_ex.frame_duration_ms = 1.0/fps*1000
 	
 	ase_ex.set_canvas_size_px(ui.width_spinbox.value, ui.height_spinbox.value)
@@ -37,12 +38,15 @@ func export_aseprite():
 	VisualServer.force_draw(true)
 	var image : Image
 	var tic := OS.get_ticks_msec()
+	progress_bar.visible = true
 	for animation_name in animations:
+		progress_label.text = "Exporting '" + animation_name + "' animation..."
 		set_animation(animation_name)
 		var animation : Animation = animation_player.get_animation(animation_name)
 		stop_animations()
 		var t := 0.0
 		while t <= animation.length:
+			progress_bar.value = 100.0*t/animation.length
 			sync_animations(t)
 #			canvas.get_parent().need_to_update = true
 			yield(VisualServer,"frame_post_draw")
@@ -66,7 +70,7 @@ func export_aseprite():
 			
 	ase_ex.create_file("res://new_test.aseprite")
 			
-	print(OS.get_ticks_msec()-tic)
+	progress_bar.visible = false
 	
 	canvas.get_parent().need_to_update = true
 
