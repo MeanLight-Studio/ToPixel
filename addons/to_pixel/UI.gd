@@ -54,7 +54,7 @@ func get_sprites(node):
 		get_sprites(child)
 
 func load_scene(path : String):
-	var scene := preload("res://Sprite.tscn").instance()
+	var scene = load(path).instance()
 	viewport.add_scene(scene)
 	sprites = []
 	get_sprites(scene)
