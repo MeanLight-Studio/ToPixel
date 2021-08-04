@@ -18,21 +18,25 @@ func can_drop_data(_position, data):
 
 
 func drop_data(position, item : TreeItem):
-	if item.get_metadata(0)["type"] == "layer":
-		return
+
 	
 	var shift = get_drop_section_at_position(position)
 	var to_item : TreeItem = get_item_at_position(position)
 	var parent_item : TreeItem
 	
 	parent_item = to_item
-	if parent_item.get_metadata(0)["type"] != "layer" or shift != 0:
-		parent_item = to_item.get_parent()
-	if parent_item == get_root():
-		return
+	if item.get_metadata(0)["type"] == "layer":
+		parent_item = get_root()
+	else:
+		if parent_item.get_metadata(0)["type"] != "layer" or shift != 0:
+			parent_item = to_item.get_parent()
+		if parent_item == get_root():
+			return
 	
 	var idx = 0
 	var position_item : TreeItem = parent_item.get_children()
+	
+	# move item
 	
 	while position_item != null:
 		idx +=1
@@ -41,14 +45,24 @@ func drop_data(position, item : TreeItem):
 				idx -= 1 
 			break
 		position_item = position_item.get_next()
-
-
+		
 	
 	var new_item := create_item(parent_item, idx)
 	new_item.set_text(0, item.get_text(0))
 	new_item.set_metadata(0, item.get_metadata(0))
 	new_item.set_icon(0, item.get_icon(0))
 	new_item.set_icon_max_width(0, item.get_icon_max_width(0))
+	
+	var item_child := item.get_children()
+	
+	while item_child != null:
+		var new_item_child := create_item(new_item)
+		new_item_child.set_text(0, item_child.get_text(0))
+		new_item_child.set_metadata(0, item_child.get_metadata(0))
+		new_item_child.set_icon(0, item_child.get_icon(0))
+		new_item_child.set_icon_max_width(0, item_child.get_icon_max_width(0))
+		item_child = item_child.get_next()
+	
 	item.free()
 	
 

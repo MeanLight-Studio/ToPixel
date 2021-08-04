@@ -141,6 +141,9 @@ func get_animations( only_checked := false) -> Array:
 
 func get_layers() -> Dictionary:
 	var layers := {}
+	# we need an array to revere it and make the dictionary in order
+	var layers_array := []
+	
 	var layer : TreeItem = sprites_tree.get_root().get_children()
 	while layer != null:
 		var sprites := []
@@ -149,8 +152,15 @@ func get_layers() -> Dictionary:
 			sprites.append(layer_child.get_metadata(0)["path"])
 			layer_child = layer_child.get_next()
 		layers[layer.get_text(0)] = sprites
+		layers_array.append(layer.get_text(0))
 		layer = layer.get_next()
-	return layers
+		
+	layers_array.invert()
+	var return_layers := {}
+	for layer_name in layers_array:
+		return_layers[layer_name] = layers[layer_name]
+	
+	return return_layers
 
 
 func _on_FileDialog_file_selected(path):
