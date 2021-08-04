@@ -69,7 +69,6 @@ func drop_data(position, item : TreeItem):
 		
 
 func _on_Tree_item_activated():
-	print("doble")
 	var selected_item : TreeItem = get_selected()
 	if selected_item:
 		selected_item.set_editable(0,true)
