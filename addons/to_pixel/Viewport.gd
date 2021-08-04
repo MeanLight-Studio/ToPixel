@@ -10,4 +10,3 @@ func add_scene(scene):
 	for child in origin.get_children():
 		child.queue_free()
 	origin.add_child(scene)
-
