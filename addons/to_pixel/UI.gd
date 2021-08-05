@@ -164,7 +164,7 @@ func get_animations( only_checked := false) -> Array:
 
 func get_layers() -> Dictionary:
 	var layers := {}
-	# we need an array to revere it and make the dictionary in order
+	# TODO: simplify this, i thought i needed to invert the layers
 	var layers_array := []
 	
 	var layer : TreeItem = sprites_tree.get_root().get_children()
@@ -178,7 +178,7 @@ func get_layers() -> Dictionary:
 		layers_array.append(layer.get_text(0))
 		layer = layer.get_next()
 		
-	layers_array.invert()
+#	layers_array.invert()
 	var return_layers := {}
 	for layer_name in layers_array:
 		return_layers[layer_name] = layers[layer_name]
