@@ -133,7 +133,8 @@ func _on_AnimationOptionButton_item_selected(index):
 		var animation_player := get_current_animation_player(layer)
 		if index == 0:
 			animation_player.stop()
-		animation_player.play(animations_options.text)
+		else:
+			animation_player.play(animations_options.text)
 
 func _on_animation_finished(animation):
 	animations_options.select(0)
@@ -218,7 +219,8 @@ func update_layers_children_visibility():
 	sync_animation_players()
 
 func sync_animation_players():
-	pass
-#	for layer in layers_container.get_children():
-#		for player in layer.get_animation_players():
-#			player.seek(0, true)
+	for layer in layers_container.get_children():
+		for player in layer.get_animation_players():
+			if animations_options.selected != 0:
+				player.current_animation = animations_options.text
+				player.seek(0, true)
