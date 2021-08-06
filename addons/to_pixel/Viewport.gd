@@ -41,3 +41,9 @@ func _get_animation_players(node):
 func set_children_visible(children_info : Dictionary):
 	for path in children_info:
 		origin.get_node(path).self_modulate = Color.white if children_info[path] else Color.transparent
+
+func set_all_children_visibility(visible : bool):
+	_sprites_path = []
+	_get_sprites_path(self)
+	for path in _sprites_path:
+		origin.get_node(path).self_modulate = Color.white if visible else Color.transparent
