@@ -1,6 +1,8 @@
 tool
 extends VBoxContainer
 
+signal scene_loaded
+
 export (NodePath) var canvas_viewport_path
 export (NodePath) var layers_path
 export (NodePath) var viewport_background_path
@@ -8,6 +10,7 @@ export (NodePath) var viewport_background_path
 var sprites := []
 var animation_players := []
 var layers = 0
+var scene = null
 
 onready var canvas_viewport := get_node(canvas_viewport_path)
 onready var layers_container := get_node(layers_path)
@@ -58,7 +61,7 @@ func get_sprites(node):
 		
 
 func load_scene(path : String):
-	var scene = load(path).instance()
+	scene = load(path).instance()
 	var viewport := preload("res://addons/to_pixel/Viewport.tscn").instance()
 	
 	for l in layers_container.get_children():
@@ -188,6 +191,7 @@ func get_layers() -> Dictionary:
 
 func _on_FileDialog_file_selected(path):
 	load_scene(path)
+	emit_signal("scene_loaded")
 
 func update_layers_children_visibility():
 	var layer : TreeItem = sprites_tree.get_root().get_children()

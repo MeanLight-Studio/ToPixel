@@ -2,6 +2,7 @@ tool
 extends Control
 
 var fps := 12.0
+var file_name := "test.aseprite"
 
 onready var canvas := $HBoxContainer/ViewportBackground/TextureRect
 onready var ui := $HBoxContainer/UI
@@ -9,6 +10,7 @@ onready var canvas_viewport := $HBoxContainer/ViewportBackground/Viewport
 onready var texture_in_viewport := $HBoxContainer/ViewportBackground/Viewport/TextureRect
 onready var viewport_background := $HBoxContainer/ViewportBackground
 onready var layers_container := $Layers
+onready var config_dialog := $ExportConfigDialog
 onready var progress_bar : ProgressBar = viewport_background.get_node("ProgressBar")
 onready var progress_label : Label = progress_bar.get_node("Label")
 
@@ -70,7 +72,7 @@ func export_aseprite():
 			t += 1.0/fps
 			ase_ex.next_frame()
 			
-	ase_ex.create_file("res://new_test.aseprite")
+	ase_ex.create_file(file_name)
 			
 	progress_bar.visible = false
 	
@@ -134,3 +136,11 @@ func sync_animations(t : float):
 	for layer in layers_container.get_children():
 		ui.get_current_animation_player(layer).seek(t,true)
 	
+func export_file():
+	match config_dialog.current_ext:
+		".aseprite":
+			export_aseprite()
+		".png":
+			export_spritesheet()
+			
+	file_name = config_dialog.file_name_edit.text
